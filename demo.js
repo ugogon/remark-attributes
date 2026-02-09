@@ -41,8 +41,9 @@ function parse(markdown) {
 }
 
 const ast = parse(`
-* this
-* is
-* a test { .red }
+{ .red }
+----
+
+----{ .green }
 `);
 

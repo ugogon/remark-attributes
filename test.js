@@ -614,6 +614,116 @@ test('remark-attributes: all element types', async (t) => {
     const html = await toHtml('{.bq}\n> quote')
     assert.ok(html.includes('<blockquote class="bq">'))
   })
+
+  await t.test('thematic break (setext style)', async () => {
+    const html = await toHtml('{.hr}\n---')
+    assert.ok(html.includes('<hr class="hr">'))
+  })
+
+  await t.test('thematic break (trailing style)', async () => {
+    const html = await toHtml('---\n{.hr}')
+    assert.ok(html.includes('<hr class="hr">'))
+  })
+})
+
+// =============================================================================
+// Thematic Break Attributes
+// =============================================================================
+
+test('remark-attributes: thematic breaks', async (t) => {
+  await t.test('setext style {.class}\\n--- produces hr', async () => {
+    const html = await toHtml('{.class}\n---')
+    assert.ok(html.includes('<hr class="class">'))
+    assert.ok(!html.includes('<h2'))
+  })
+
+  await t.test('setext style with id {#my-hr}\\n---', async () => {
+    const html = await toHtml('{#my-hr}\n---')
+    assert.ok(html.includes('<hr id="my-hr">'))
+  })
+
+  await t.test('setext style with multiple attributes', async () => {
+    const html = await toHtml('{#divider .fancy data-role="separator"}\n---')
+    assert.ok(html.includes('id="divider"'))
+    assert.ok(html.includes('class="fancy"'))
+    assert.ok(html.includes('data-role="separator"'))
+  })
+
+  await t.test('trailing style ---\\n{.class} produces hr', async () => {
+    const html = await toHtml('---\n{.class}')
+    assert.ok(html.includes('<hr class="class">'))
+    assert.ok(!html.includes('<p'))
+  })
+
+  await t.test('trailing style with id ---\\n{#my-hr}', async () => {
+    const html = await toHtml('---\n{#my-hr}')
+    assert.ok(html.includes('<hr id="my-hr">'))
+  })
+
+  await t.test('regular setext heading still works', async () => {
+    const html = await toHtml('Heading Text {.class}\n---')
+    assert.ok(html.includes('<h2 class="class">'))
+    assert.ok(html.includes('Heading Text'))
+    assert.ok(!html.includes('<hr'))
+  })
+
+  await t.test('plain hr without attributes', async () => {
+    const html = await toHtml('---')
+    assert.ok(html.includes('<hr>'))
+  })
+
+  await t.test('hr between content', async () => {
+    const html = await toHtml('Paragraph 1.\n\n{.divider}\n---\n\nParagraph 2.')
+    assert.ok(html.includes('<p>Paragraph 1.</p>'))
+    assert.ok(html.includes('<hr class="divider">'))
+    assert.ok(html.includes('<p>Paragraph 2.</p>'))
+  })
+
+  await t.test('multiple hrs with different attributes', async () => {
+    const html = await toHtml('{.first}\n---\n\ntext\n\n---\n{.second}')
+    assert.ok(html.includes('<hr class="first">'))
+    assert.ok(html.includes('<hr class="second">'))
+  })
+})
+
+// =============================================================================
+// Thematic Break Position Tests
+// =============================================================================
+
+test('remark-attributes: thematic break positions', async (t) => {
+  await t.test('setext style hr has correct position', () => {
+    const tree = parseAndTransform('{.class}\n---')
+    const hr = tree.children[0]
+
+    assert.equal(hr.type, 'thematicBreak')
+    assert.ok(hr.position)
+    // The hr position should be on line 2 (the --- line)
+    assert.equal(hr.position.start.line, 2)
+    assert.equal(hr.position.end.line, 2)
+  })
+
+  await t.test('trailing style hr has original position', () => {
+    const tree = parseAndTransform('---\n{.class}')
+    const hr = tree.children[0]
+
+    assert.equal(hr.type, 'thematicBreak')
+    assert.ok(hr.position)
+    // The hr position should be on line 1
+    assert.equal(hr.position.start.line, 1)
+    assert.equal(hr.position.end.line, 1)
+  })
+
+  await t.test('setext style hr has correct hProperties', () => {
+    const tree = parseAndTransform('{#id .class data-test="value"}\n---')
+    const hr = tree.children[0]
+
+    assert.equal(hr.type, 'thematicBreak')
+    assert.deepEqual(hr.data?.hProperties, {
+      id: 'id',
+      class: 'class',
+      'data-test': 'value'
+    })
+  })
 })
 
 console.log('All remark-attributes tests defined')
