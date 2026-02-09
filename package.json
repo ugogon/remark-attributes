@@ -15,8 +15,8 @@
     "index.js"
   ],
   "dependencies": {
-    "mdast-util-attributes": "file:../mdast-util-attributes",
-    "micromark-extension-attributes": "file:../micromark-extension-attributes"
+    "mdast-util-attributes": "github:ugogon/mdast-util-attributes",
+    "micromark-extension-attributes": "github:ugogon/micromark-extension-attributes"
   },
   "devDependencies": {
     "@types/mdast": "^4.0.0",
