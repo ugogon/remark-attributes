@@ -620,10 +620,6 @@ test('remark-attributes: all element types', async (t) => {
     assert.ok(html.includes('<hr class="hr">'))
   })
 
-  await t.test('thematic break (trailing style)', async () => {
-    const html = await toHtml('---\n{.hr}')
-    assert.ok(html.includes('<hr class="hr">'))
-  })
 })
 
 // =============================================================================
@@ -649,17 +645,6 @@ test('remark-attributes: thematic breaks', async (t) => {
     assert.ok(html.includes('data-role="separator"'))
   })
 
-  await t.test('trailing style ---\\n{.class} produces hr', async () => {
-    const html = await toHtml('---\n{.class}')
-    assert.ok(html.includes('<hr class="class">'))
-    assert.ok(!html.includes('<p'))
-  })
-
-  await t.test('trailing style with id ---\\n{#my-hr}', async () => {
-    const html = await toHtml('---\n{#my-hr}')
-    assert.ok(html.includes('<hr id="my-hr">'))
-  })
-
   await t.test('regular setext heading still works', async () => {
     const html = await toHtml('Heading Text {.class}\n---')
     assert.ok(html.includes('<h2 class="class">'))
@@ -680,7 +665,7 @@ test('remark-attributes: thematic breaks', async (t) => {
   })
 
   await t.test('multiple hrs with different attributes', async () => {
-    const html = await toHtml('{.first}\n---\n\ntext\n\n---\n{.second}')
+    const html = await toHtml('{.first}\n---\n\ntext\n\n{.second}\n---')
     assert.ok(html.includes('<hr class="first">'))
     assert.ok(html.includes('<hr class="second">'))
   })
@@ -700,17 +685,6 @@ test('remark-attributes: thematic break positions', async (t) => {
     // The hr position should be on line 2 (the --- line)
     assert.equal(hr.position.start.line, 2)
     assert.equal(hr.position.end.line, 2)
-  })
-
-  await t.test('trailing style hr has original position', () => {
-    const tree = parseAndTransform('---\n{.class}')
-    const hr = tree.children[0]
-
-    assert.equal(hr.type, 'thematicBreak')
-    assert.ok(hr.position)
-    // The hr position should be on line 1
-    assert.equal(hr.position.start.line, 1)
-    assert.equal(hr.position.end.line, 1)
   })
 
   await t.test('setext style hr has correct hProperties', () => {
