@@ -1,0 +1,35 @@
+{
+  "name": "remark-attributes",
+  "version": "0.0.1",
+  "description": "remark plugin to add attribute syntax to markdown elements",
+  "license": "MIT",
+  "type": "module",
+  "types": "./index.d.ts",
+  "exports": {
+    "types": "./index.d.ts",
+    "default": "./index.js"
+  },
+  "files": [
+    "lib/",
+    "index.d.ts",
+    "index.js"
+  ],
+  "dependencies": {
+    "mdast-util-attributes": "github:ugogon/mdast-util-attributes",
+    "micromark-extension-attributes": "github:ugogon/micromark-extension-attributes"
+  },
+  "devDependencies": {
+    "@types/mdast": "^4.0.0",
+    "@types/node": "^22.0.0",
+    "rehype-stringify": "^10.0.0",
+    "remark-parse": "^11.0.0",
+    "remark-rehype": "^11.0.0",
+    "typescript": "^5.9.3",
+    "unified": "^11.0.0",
+    "remark": "^15.0.0",
+    "remark-directive": "^4.0.0"
+  },
+  "scripts": {
+    "test": "node --conditions development --test test.js"
+  }
+}
