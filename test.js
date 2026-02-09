@@ -299,7 +299,7 @@ test('remark-attributes: phase 2 - hProperties', async (t) => {
     const emphasis = paragraph.children[0]
 
     assert.equal(emphasis.type, 'emphasis')
-    assert.deepEqual(emphasis.data?.hProperties, {class: 'class'})
+    assert.deepEqual(emphasis.data?.hProperties, {className: ['class']})
     // mdastAttributes node should be removed
     assert.equal(paragraph.children.length, 1)
   })
@@ -321,7 +321,7 @@ test('remark-attributes: phase 2 - hProperties', async (t) => {
 
     assert.equal(code.type, 'code')
     assert.equal(code.lang, 'js')
-    assert.deepEqual(code.data?.hProperties, {class: 'highlight'})
+    assert.deepEqual(code.data?.hProperties, {className: ['language-js', 'highlight']})
     // mdastAttributes should be removed from data
     assert.equal(code.data?.mdastAttributes, undefined)
   })
@@ -392,7 +392,7 @@ test('remark-attributes: list items', async (t) => {
     const tree = parseAndTransform('* outer\n\n  * inner {.nested}\n\n* other')
     // Navigate: root > list > listItem[0] > list > listItem[0]
     const nestedListItem = tree.children[0].children[0].children[1].children[0]
-    assert.deepEqual(nestedListItem.data?.hProperties, {class: 'nested'})
+    assert.deepEqual(nestedListItem.data?.hProperties, {className: ['nested']})
   })
 
   await t.test('nested list item with attributes - HTML', async () => {
@@ -405,7 +405,7 @@ test('remark-attributes: list items', async (t) => {
     // so they survive remark-rehype paragraph unwrapping
     const tree = parseAndTransform('* foo\n* bar {.red}\n* baz')
     const listItem = tree.children[0].children[1]
-    assert.deepEqual(listItem.data?.hProperties, {class: 'red'})
+    assert.deepEqual(listItem.data?.hProperties, {className: ['red']})
     // Paragraph should no longer have hProperties
     const paragraph = listItem.children[0]
     assert.equal(paragraph.data?.hProperties, undefined)
@@ -492,7 +492,7 @@ test('remark-attributes: two-phase plugins', async (t) => {
     const emphasis = paragraph.children[0]
 
     assert.equal(emphasis.type, 'emphasis')
-    assert.deepEqual(emphasis.data?.hProperties, {class: 'class'})
+    assert.deepEqual(emphasis.data?.hProperties, {className: ['class']})
     // mdastAttributes node should be removed
     assert.equal(paragraph.children.length, 1)
   })
@@ -526,7 +526,7 @@ test('remark-attributes: two-phase plugins', async (t) => {
     const transformed = processor.runSync(tree)
     const emphasis = transformed.children[0].children[0]
 
-    assert.deepEqual(emphasis.data?.hProperties, {class: 'prefix-highlight'})
+    assert.deepEqual(emphasis.data?.hProperties, {className: ['prefix-highlight']})
   })
 
   await t.test('two-phase produces same HTML as combined plugin', async () => {
@@ -720,7 +720,7 @@ test('remark-attributes: thematic break positions', async (t) => {
     assert.equal(hr.type, 'thematicBreak')
     assert.deepEqual(hr.data?.hProperties, {
       id: 'id',
-      class: 'class',
+      className: ['class'],
       'data-test': 'value'
     })
   })

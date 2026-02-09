@@ -15,8 +15,8 @@
     "index.js"
   ],
   "dependencies": {
-    "mdast-util-attributes": "github:ugogon/mdast-util-attributes",
-    "micromark-extension-attributes": "github:ugogon/micromark-extension-attributes"
+    "mdast-util-attributes": "file:../mdast-util-attributes",
+    "micromark-extension-attributes": "file:../micromark-extension-attributes"
   },
   "devDependencies": {
     "@types/mdast": "^4.0.0",
@@ -27,7 +27,8 @@
     "typescript": "^5.9.3",
     "unified": "^11.0.0",
     "remark": "^15.0.0",
-    "remark-directive": "^4.0.0"
+    "remark-directive": "^4.0.0",
+    "remark-percent-break": "file:../../remark-percent-break"
   },
   "scripts": {
     "test": "node --conditions development --test test.js"

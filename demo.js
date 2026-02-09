@@ -10,6 +10,7 @@ import remarkParse from 'remark-parse'
 import remarkDirective from 'remark-directive'
 import remarkRehype from 'remark-rehype'
 import rehypeStringify from 'rehype-stringify'
+import remarkPercentBreak from 'remark-percent-break'
 import remarkAttributes, {
     remarkAttributesParse,
     remarkAttributesTransform
@@ -24,7 +25,8 @@ function parse(markdown) {
   const processor = remark()
     .use(remarkParse)
     .use(remarkDirective)
-    .use(remarkAttributesParse)   
+    .use(remarkAttributesParse)
+    .use(remarkPercentBreak)
     .use(function () {
         return function (tree) {
           console.dir(tree,{ depth: null })
@@ -41,9 +43,14 @@ function parse(markdown) {
 }
 
 const ast = parse(`
-{ .red }
-----
 
-----{ .green }
+{ .green }
+:::div
+:::
+
+
+{ .green }
+\`\`\`div
+\`\`\`
 `);
 
